@@ -12,12 +12,16 @@ urlpatterns = [
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Snippets API",
+        title='API проекта Polls',
         default_version='v1',
-        description="Test description",
-        terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@snippets.local"),
-        license=openapi.License(name="BSD License"),
+        description='Проект выполнен в рамках тестового задания',
+        contact=openapi.Contact(
+            name='Владислав',
+            email='sidorenkov.v.a@yandex.ru',
+            url='https://github.com/sidorenkov-v-a',
+            telegram='https://t.me/sidorenkov_vl'
+        ),
+        license=openapi.License(name='MIT License'),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
