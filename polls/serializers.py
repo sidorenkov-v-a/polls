@@ -61,16 +61,17 @@ class PollSerializer(ModelSerializer):
         fields = '__all__'
 
     def validate(self, attrs):
-        if self.instance:
-            date_start = self.instance.date_start
-        else:
-            date_start = attrs['date_start']
+        date_start = attrs.get('date_start', None)
+        date_end = attrs.get('date_end', None)
 
-        date_end = attrs['date_end']
-        if date_start > date_end:
-            raise ValidationError(
-                {'error': 'Date start should be less than date end'}
-            )
+        if not date_start and self.instance:
+            date_start = self.instance.date_start
+
+        if date_start and date_end:
+            if date_start > date_end:
+                raise ValidationError(
+                    {'error': 'Date start should be less than date end'}
+                )
         return attrs
 
 
