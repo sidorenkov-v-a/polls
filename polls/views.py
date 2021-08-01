@@ -1,27 +1,20 @@
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from .serializers import (
-    PollSerializer, QuestionSerializer, PollNoStartDateSerializer, ScoreSerializer, AnswerSerializer
+    PollSerializer, QuestionSerializer, PollNoStartDateSerializer,
+    ScoreSerializer
 )
-from .models import Poll, Question, Score, Answer
+from .models import Poll, Question, Score
 from .permissions import IsAdmin
 from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def hello(request):
-    return Response({"message": "Hello, world!"})
-
-
 class PollViewSet(ModelViewSet):
-    queryset = Poll.objects.all()
+    queryset = Poll.objects.all().order_by('date_start')
     serializer_class = PollSerializer
-    permission_classes = (IsAdmin,)
-    ordering = ['-date_start']
+    permission_classes_by_action = {'list': [AllowAny], 'default': [IsAdmin]}
 
     def get_serializer_class(self):
         if self.request.method in ('PUT', 'PATCH'):
@@ -30,10 +23,9 @@ class PollViewSet(ModelViewSet):
 
 
 class QuestionViewSet(ModelViewSet):
-    queryset = Question.objects.all()
+    queryset = Question.objects.all().order_by('poll')
     serializer_class = QuestionSerializer
-    permission_classes = (IsAdmin,)
-    ordering = ['poll']
+    permission_classes = [IsAdmin]
 
     @swagger_auto_schema(responses={200: 'Types of question'})
     @action(detail=False, methods=['get'])
@@ -42,14 +34,9 @@ class QuestionViewSet(ModelViewSet):
 
 
 class ScoreViewSet(ModelViewSet):
-    queryset = Score.objects.all()
+    queryset = Score.objects.all().order_by('poll')
     serializer_class = ScoreSerializer
     permission_classes = [AllowAny]
     filterset_fields = ['user_id']
-    http_method_names = ['get', 'post']
-
-
-class AnswerViewSet(ModelViewSet):
-    queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
-    permission_classes = [AllowAny]
+    http_method_names = ['get', 'post', 'delete']
+    permission_classes_by_action = {'delete': [IsAdmin], 'default': [AllowAny]}
