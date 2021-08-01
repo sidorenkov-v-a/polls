@@ -81,12 +81,41 @@ class TestPoll:
             response.json()
         )
 
-    def test_start_time_change(self):
-        pass
+    def test_time(self, admin_client: APIClient):
+        from datetime import datetime, timedelta
+        date_start = datetime.today()
+        date_end = datetime.today() - timedelta(days=1)
+        data = create_poll_data(date_start=date_start, date_end=date_end)
+
+        response = admin_client.post(self.url_list, data)
+        assert response.status_code == 400, (
+            'Date end should be greater than date start',
+            response.json()
+        )
+
+        data = create_poll_data()
+        Poll.objects.create(**data)
+        response = admin_client.patch(
+            self.url_detail,
+            {'date_start': date_start, 'date_end': date_end}
+        )
+        assert response.status_code == 400, (
+            'Date end should be greater than date start',
+            response.json()
+        )
+
+        response = admin_client.patch(
+            self.url_detail,
+            {'date_end': date_end}
+        )
+        assert response.status_code == 400, (
+            'Date end should be greater than date start',
+            response.json()
+        )
+
+        # ///Can not change start date after creat
 
 
-    def test_start_end_date_validation(self):
-        pass
 
 
 

@@ -9,14 +9,6 @@ class Poll(models.Model):
     date_end = models.DateField(verbose_name=_('Date end'))
     description = models.TextField(verbose_name=_('Description'))
 
-    class Meta:
-        constraints = [
-            models.CheckConstraint(
-                name='%(app_label)s_%(class)s_date_constraint',
-                check=Q(date_end__gte=F('date_start'))
-            )
-        ]
-
     def __str__(self):
         return self.title
 
@@ -106,4 +98,3 @@ class Score(models.Model):
         related_name='results',
         verbose_name='Poll'
     )
-
