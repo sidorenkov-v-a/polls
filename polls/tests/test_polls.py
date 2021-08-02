@@ -1,7 +1,8 @@
 from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
+
 from polls.models import Poll
-from django.contrib.auth import get_user_model
+
 from .common import create_poll_data
 
 
@@ -113,10 +114,14 @@ class TestPoll:
             response.json()
         )
 
-        # ///Can not change start date after creat
+        new_date_start = date_start - timedelta(days=1)
+        response = admin_client.patch(
+            self.url_detail,
+            {'date_start': new_date_start}
+        )
 
-
-
-
-
-
+        db_date_start = Poll.objects.get(pk=1).date_start.strftime('%Y-%m-%d')
+        date_start = date_start.strftime('%Y-%m-%d')
+        assert db_date_start == date_start, (
+            'Change start date is NOT allowed.',
+        )

@@ -1,6 +1,7 @@
-from rest_framework.serializers import ModelSerializer, ValidationError
 from rest_framework import serializers
-from .models import Poll, Question, Choice, Answer, Score
+from rest_framework.serializers import ModelSerializer, ValidationError
+
+from .models import Answer, Choice, Poll, Question, Score
 
 
 class ChoiceSerializer(ModelSerializer):
@@ -117,8 +118,8 @@ class AnswerSerializer(ModelSerializer):
             if not text:
                 raise ValidationError(required_detail('text', type))
 
-        if (type == Question.ONE_CHOICE_ANSWER or
-                type == Question.MULTI_CHOICE_ANSWER):
+        if (type == Question.ONE_CHOICE_ANSWER
+                or type == Question.MULTI_CHOICE_ANSWER):
             if text:
                 raise ValidationError(not_allowed_detail('text', type))
             if not choices:
@@ -126,9 +127,10 @@ class AnswerSerializer(ModelSerializer):
 
         if type == Question.ONE_CHOICE_ANSWER and len(choices) > 1:
             raise ValidationError(
-                {'choices_id':
-                     f'Only one choice allowed for this question type: {type}'
-                 }
+                {
+                    'choices_id':
+                        f'Only one choice allowed for question type: {type}'
+                }
             )
 
     def _validate_choices(self, attrs):
@@ -137,10 +139,11 @@ class AnswerSerializer(ModelSerializer):
         set_question_choices = {_.pk for _ in question.choices.all()}
         if not set_choices.issubset(set_question_choices):
             raise ValidationError(
-                {'Choices':
-                     ('IDs should be in question choices range: '
-                      f'{list(set_question_choices)}')
-                 }
+                {'Choices': (
+                    'IDs should be in question choices range: '
+                    f'{list(set_question_choices)}'
+                )
+                }
             )
 
     def validate(self, attrs):

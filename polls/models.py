@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import F, Q
 from django.utils.translation import ugettext_lazy as _
 
 

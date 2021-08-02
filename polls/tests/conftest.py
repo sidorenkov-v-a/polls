@@ -22,5 +22,3 @@ def admin_client():
 def user_client():
     client = APIClient()
     return client
-
-

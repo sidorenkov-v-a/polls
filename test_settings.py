@@ -1,16 +1,10 @@
 import os
 
-import environ
-
-env = environ.Env()
-environ.Env.read_env(env_file='.env')
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = env('SECRET_KEY')
-DEBUG = env.bool('DEBUG', False)
+SECRET_KEY = 'secret key'
+DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
-ALLOWED_HOSTS += env.list('ALLOWED_HOSTS', default=[])
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -57,21 +51,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'polls_project.wsgi.application'
 
 DATABASES = {
-    'develop': {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
-    'production': {
-        'ENGINE': env('DB_ENGINE'),
-        'NAME': env('DB_NAME'),
-        'USER': env('POSTGRES_USER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT'),
     }
 }
-
-DATABASES['default'] = DATABASES['develop' if DEBUG else 'production']
 
 AUTH_PASSWORD_VALIDATORS = [
     {

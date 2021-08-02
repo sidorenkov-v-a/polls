@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Poll, Question, Choice, Answer, Score
+
+from .models import Answer, Choice, Poll, Question, Score
 
 
 class PollAdmin(admin.ModelAdmin):
@@ -32,4 +33,3 @@ admin.site.register(Poll, PollAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(Score, ScoreAdmin)
-

@@ -1,14 +1,13 @@
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from .serializers import (
-    PollSerializer, QuestionSerializer, PollNoStartDateSerializer,
-    ScoreSerializer
-)
+
 from .models import Poll, Question, Score
 from .permissions import IsAdmin
-from rest_framework.decorators import action
-from drf_yasg.utils import swagger_auto_schema
+from .serializers import (PollNoStartDateSerializer, PollSerializer,
+                          QuestionSerializer, ScoreSerializer)
 
 
 class PollViewSet(ModelViewSet):
